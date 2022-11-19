@@ -16,7 +16,16 @@ class MainWidget(Widget):
 
     def on_size(self, *args):  # are these built-in functions?
         print("ON SIZE INIT W: " + str(self.width) + " H: " + str(self.height))
+        # self.perspective_point_x = self.width/2
+        # self.perspective_point_y = self.height * 0.75
 
+    def on_perspective_point_x(self, widget, value):  # this method is based on a property in kivy. It's automatically called when the property changes in value.
+        # print("PX: " + str(value))
+        pass
+
+    def on_perspective_point_y(self, widget, value): # (same as method above)
+        # print("PY: " + str(value))
+        pass
 
 class GalaxyApp(App):
     pass
