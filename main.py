@@ -8,7 +8,9 @@ class MainWidget(Widget):
     perspective_point_x = NumericProperty(0)
     perspective_point_y = NumericProperty(0)
 
-    line = None  # to put the line in the middle of the window
+    V_NB_LINES = 7  # we'll use 7 lines in total
+    V_LINES_SPACING = .1  # 10% of the screen width
+    vertical_lines = []  # this will be where we keep the lists of vertical lines
 
     def __init__(self, **kwargs):
         super(MainWidget, self).__init__(**kwargs)
@@ -36,11 +38,15 @@ class MainWidget(Widget):
     def init_vertical_lines(self):
         with self.canvas:
             Color(1,1,1)
-            self.line = Line(points=[100, 0, 100, 100]) # this populates x1, y1, x2, y2 for the line. 
+            # self.line = Line(points=[100, 0, 100, 100]) # this populates x1, y1, x2, y2 for the line. 
+            for i in range(0, self.V_NB_LINES): # this loop will create the spacing for the lines.
+                self.vertical_lines.append(Line()) # (I believe) as you create the spaces you'll be appending them to the Line list. 
 
     def update_vertical_lines(self):
-        center_x = int(self.width/2)
+        center_line_x = int(self.width/2)
         self.line.points = [center_x, 0, center_x, 100]
+        for i in range(0, self.V_NB_LINES): # this loop assigns the lines to the points you've established
+                self.vertical_lines[i].points = [] # don't understand this line.
 
 class GalaxyApp(App):
     pass
