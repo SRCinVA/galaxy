@@ -43,10 +43,14 @@ class MainWidget(Widget):
                 self.vertical_lines.append(Line()) # (I believe) as you create the spaces you'll be appending them to the Line list. 
 
     def update_vertical_lines(self):
-        center_line_x = int(self.width/2)
-        self.line.points = [center_x, 0, center_x, 100]
+        central_line_x = int(self.width/2)
+        # self.line.points = [center_x, 0, center_x, 100]
+        spacing = self.V_LINES_SPACING * self.width
+        offset = -int(self.V_NB_LINES/2) # the offset from the middle point is negative since we're starting from the left.
         for i in range(0, self.V_NB_LINES): # this loop assigns the lines to the points you've established
-                self.vertical_lines[i].points = [] # don't understand this line.
+            line_x = central_line_x + offset * spacing # builds each line on the x-axis
+            self.vertical_lines[i].points = [line_x, 0, line_x, self.height] # places each line on the x and y axes
+            offset += 1 # to move through each of the 7 lines
 
 class GalaxyApp(App):
     pass
