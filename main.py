@@ -8,7 +8,7 @@ class MainWidget(Widget):
     perspective_point_x = NumericProperty(0)
     perspective_point_y = NumericProperty(0)
 
-    V_NB_LINES = 7  # we'll use 7 lines in total
+    V_NB_LINES = 7  # we'll use 7 lines in total; needs to be odd so it's balanced on both sides
     V_LINES_SPACING = .1  # 10% of the screen width
     vertical_lines = []  # this will be where we keep the lists of vertical lines
 
@@ -48,7 +48,7 @@ class MainWidget(Widget):
         spacing = self.V_LINES_SPACING * self.width
         offset = -int(self.V_NB_LINES/2) # the offset from the middle point is negative since we're starting from the left.
         for i in range(0, self.V_NB_LINES): # this loop assigns the lines to the points you've established
-            line_x = central_line_x + offset * spacing # builds each line on the x-axis
+            line_x = int(central_line_x + offset * spacing) # builds each line on the x-axis
             self.vertical_lines[i].points = [line_x, 0, line_x, self.height] # places each line on the x and y axes
             offset += 1 # to move through each of the 7 lines
 
