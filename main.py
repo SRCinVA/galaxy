@@ -49,8 +49,22 @@ class MainWidget(Widget):
         offset = -int(self.V_NB_LINES/2) # the offset from the middle point is negative since we're starting from the left.
         for i in range(0, self.V_NB_LINES): # this loop assigns the lines to the points you've established
             line_x = int(central_line_x + offset * spacing) # builds each line on the x-axis
-            self.vertical_lines[i].points = [line_x, 0, line_x, self.height] # places each line on the x and y axes
+            
+            x1, y1 = self.transform(line_x, 0)
+            x2, y2 = self.transform(line_x, self.height)
+
+            self.vertical_lines[i].points = [x1, y1, x2, y2] # places each line on the x and y axes
             offset += 1 # to move through each of the 7 lines
+
+    def transform(self, x, y):
+        return
+
+    def transform_2D(self, x, y):
+        return x, y
+
+    def transform_perspective(self, x, y):
+        tr_y = y * self.perspective_point_y/ self.height
+        return x, y
 
 class GalaxyApp(App):
     pass
