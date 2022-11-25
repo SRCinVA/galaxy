@@ -57,20 +57,24 @@ class MainWidget(Widget):
             offset += 1 # to move through each of the 7 lines
 
     def transform(self, x, y):
+        # return self.transform_2D(x, y)  # we'll conduct development in 2D, then switch
         return self.transform_perspective(x,y)
 
     def transform_2D(self, x, y):
         return int(x), int(y)
 
     def transform_perspective(self, x, y):
-        tr_y = y * self.perspective_point_y/ self.height
+        tr_y = y * self.perspective_point_y/self.height
         if tr_y > self.perspective_point_y:
             tr_y = self.perspective_point_y # this makes sure the transfor y is capped at a certain point.
         
-        diff_x = x - self.perspective_point_x
-        diff_y = self.perspective_point_y - tr_y
+        diff_x = x-self.perspective_point_x
+        diff_y = self.perspective_point_y-tr_y
         proportion_y = diff_y/self.perspective_point_y
-        return int(x), int(tr_y) 
+        
+        tr_x = self.perspective_point_x + diff_x*proportion_y   # tr_x will have a directly propertional relationship to y.
+        
+        return int(tr_x), int(tr_y) 
 
 class GalaxyApp(App):
     pass
