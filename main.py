@@ -8,14 +8,19 @@ class MainWidget(Widget):
     perspective_point_x = NumericProperty(0)
     perspective_point_y = NumericProperty(0)
 
-    V_NB_LINES = 10  # we'll use 7 lines in total; needs to be odd so it's balanced on both sides
-    V_LINES_SPACING = .2  # 10% of the screen width
+    V_NB_LINES = 4 
+    V_LINES_SPACING = .1  # 10% of the screen width
     vertical_lines = []  # this will be where we keep the lists of vertical lines
+
+    H_NB_LINES = 4  
+    H_LINES_SPACING = .2   # this is the percentage in screen height
+    horizontal_lines = []  # this will be where we keep the lists of vertical lines
 
     def __init__(self, **kwargs):
         super(MainWidget, self).__init__(**kwargs)
         print("INIT W: " + str(self.width) + " H: " + str(self.height)) # from the __init__ function, the window can report its default size
         self.init_vertical_lines() # unclear why you're calling this function from __init__
+        self.init_horizontal_lines()
 
     def on_parent(self, widget, parent):  # this is when we attach the widget to the app.
         # print("ON PARENT INIT W: " + str(self.width) + " H: " + str(self.height))
@@ -26,6 +31,7 @@ class MainWidget(Widget):
         # self.perspective_point_x = self.width/2
         # self.perspective_point_y = self.height * 0.75
         self.update_vertical_lines()
+        self.update_horizontal_lines()
 
     def on_perspective_point_x(self, widget, value):  # this method is based on a property in kivy. It's automatically called when the property changes in value.
         # print("PX: " + str(value))
@@ -57,9 +63,32 @@ class MainWidget(Widget):
             self.vertical_lines[i].points = [x1, y1, x2, y2] # places each line on the x and y axes
             offset += 1 # to move through each of the 7 lines
 
+
+    def init_horizontal_lines(self):
+        with self.canvas:
+            Color(1, 1, 1)
+            # this loop will create the spacing for the lines.
+            for i in range(0, self.H_NB_LINES): # here, we loop over the horizontal lines
+                self.horizontal_lines.append(Line())
+
+    def update_horizontal_lines(self):
+        
+        
+        for i in range(0, self.H_NB_LINES): # this loop assigns the lines to the points you've established
+            line_y = 0 + i # builds each line on the y-axis
+# pick up here
+            x1, y1 = self.transform(line_x, 0)
+            x2, y2 = self.transform(line_x, self.height)
+
+            self.vertical_lines[i].points = [x1, y1, x2, y2] # places each line on the x and y axes
+            offset += 1 # to move through each of the 7 lines
+
+
+
+
     def transform(self, x, y):
-        # return self.transform_2D(x, y)  # we'll conduct development in 2D, then switch
-        return self.transform_perspective(x,y)
+        return self.transform_2D(x, y)  # we'll conduct development in 2D, then switch
+        # return self.transform_perspective(x,y)
 
     def transform_2D(self, x, y):
         return int(x), int(y)
