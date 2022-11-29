@@ -72,19 +72,15 @@ class MainWidget(Widget):
                 self.horizontal_lines.append(Line())
 
     def update_horizontal_lines(self):
-        
-        
+        xmin = 0
+        xmax = self.width
         for i in range(0, self.H_NB_LINES): # this loop assigns the lines to the points you've established
-            line_y = 0 + i # builds each line on the y-axis
-# pick up here
-            x1, y1 = self.transform(line_x, 0)
-            x2, y2 = self.transform(line_x, self.height)
+            line_y = 0 + i * self.H_LINES_SPACING * self.height # builds each line on the y-axis starting from 0, depending on the total height of the window (wo that we can resize it)
 
-            self.vertical_lines[i].points = [x1, y1, x2, y2] # places each line on the x and y axes
-            offset += 1 # to move through each of the 7 lines
+            x1, y1 = self.transform(xmin, line_y)
+            x2, y2 = self.transform(xmax, line_y)
 
-
-
+            self.horizontal_lines[i].points = [x1, y1, x2, y2] # places each line on the x and y axes
 
     def transform(self, x, y):
         return self.transform_2D(x, y)  # we'll conduct development in 2D, then switch
