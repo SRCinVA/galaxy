@@ -9,11 +9,11 @@ class MainWidget(Widget):
     perspective_point_y = NumericProperty(0)
 
     V_NB_LINES = 10 
-    V_LINES_SPACING = .1  # 10% of the screen width
+    V_LINES_SPACING = .25  # 10% of the screen width
     vertical_lines = []  # this will be where we keep the lists of vertical lines
 
     H_NB_LINES = 15
-    H_LINES_SPACING = .2   # this is the percentage in screen height
+    H_LINES_SPACING = .1   # this is the percentage in screen height
     horizontal_lines = []  # this will be where we keep the lists of vertical lines
 
     def __init__(self, **kwargs):
@@ -95,16 +95,18 @@ class MainWidget(Widget):
         return int(x), int(y)
 
     def transform_perspective(self, x, y):
-        tr_y = y * self.perspective_point_y/self.height
-        if tr_y > self.perspective_point_y:
-            tr_y = self.perspective_point_y # this makes sure the transfor y is capped at a certain point.
+        lin_y = y * self.perspective_point_y/self.height
+        if lin_y > self.perspective_point_y:
+            lin_y = self.perspective_point_y # this makes sure the transfor y is capped at a certain point.
         
         diff_x = x-self.perspective_point_x
-        diff_y = self.perspective_point_y-tr_y
-        proportion_y = diff_y/self.perspective_point_y
-        
-        tr_x = self.perspective_point_x + diff_x*proportion_y   # tr_x will have a directly propertional relationship to y.
-        
+        diff_y = self.perspective_point_y-lin_y
+        factor_y = diff_y/self.perspective_point_y
+        factor_y = pow(factor_y, 4) # exponent function
+
+        tr_x = self.perspective_point_x + diff_x * factor_y   # tr_x will have a directly propertional relationship to y.
+        tr_y = self.perspective_point_y - factor_y * self.perspective_point_y
+
         return int(tr_x), int(tr_y) 
 
 class GalaxyApp(App):
