@@ -3,6 +3,8 @@ from kivy.properties import NumericProperty
 from kivy.graphics.context_instructions import Color
 from kivy.graphics.vertex_instructions import Line
 from kivy.uix.widget import Widget
+from kivy.properties import Clock
+
 
 class MainWidget(Widget):
     perspective_point_x = NumericProperty(0)
@@ -21,6 +23,8 @@ class MainWidget(Widget):
         print("INIT W: " + str(self.width) + " H: " + str(self.height)) # from the __init__ function, the window can report its default size
         self.init_vertical_lines() # unclear why you're calling this function from __init__
         self.init_horizontal_lines()
+        Clock.schedule_interval(self.update, 1.0/60.0)  # using the update function for recreating the lines for the scrolling effect. 
+                                                        # calling it 60 times per second
 
     def on_parent(self, widget, parent):  # this is when we attach the widget to the app.
         # print("ON PARENT INIT W: " + str(self.width) + " H: " + str(self.height))
@@ -108,6 +112,10 @@ class MainWidget(Widget):
         tr_y = self.perspective_point_y - factor_y * self.perspective_point_y
 
         return int(tr_x), int(tr_y) 
+
+    def update(self, dt):
+        print("update")
+
 
 class GalaxyApp(App):
     pass
