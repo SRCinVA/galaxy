@@ -18,6 +18,9 @@ class MainWidget(Widget):
     H_LINES_SPACING = .1   # this is the percentage in screen height
     horizontal_lines = []  # this will be where we keep the lists of vertical lines
 
+    SPEED = 4
+    current_offset_y = 0
+
     def __init__(self, **kwargs):
         super(MainWidget, self).__init__(**kwargs)
         print("INIT W: " + str(self.width) + " H: " + str(self.height)) # from the __init__ function, the window can report its default size
@@ -31,11 +34,12 @@ class MainWidget(Widget):
         pass
 
     def on_size(self, *args):  # are these built-in functions?
-        print("ON SIZE INIT W: " + str(self.width) + " H: " + str(self.height))
+        # print("ON SIZE INIT W: " + str(self.width) + " H: " + str(self.height))
         # self.perspective_point_x = self.width/2
         # self.perspective_point_y = self.height * 0.75
-        self.update_vertical_lines()
-        self.update_horizontal_lines()
+        # self.update_vertical_lines() # we'll rely on the update function to take care of this
+        # self.update_horizontal_lines() # we'll rely on the update function to take care of this.
+        pass
 
     def on_perspective_point_x(self, widget, value):  # this method is based on a property in kivy. It's automatically called when the property changes in value.
         # print("PX: " + str(value))
@@ -84,8 +88,8 @@ class MainWidget(Widget):
         spacing_y = self.H_LINES_SPACING * self.height
 
         for i in range(0, self.H_NB_LINES): # this loop assigns the lines to the points you've established
-            line_y = i * spacing_y # builds each line on the y-axis starting from 0, depending on the total height of the window (wo that we can resize it)
-
+            line_y = i * spacing_y - self.current_offset_y # builds each line on the y-axis starting from 0, depending on the total height of the window (wo that we can resize it)
+                                                            # unclear what the offset is doing here.
             x1, y1 = self.transform(xmin, line_y)
             x2, y2 = self.transform(xmax, line_y)
 
@@ -114,8 +118,10 @@ class MainWidget(Widget):
         return int(tr_x), int(tr_y) 
 
     def update(self, dt):
-        print("update")
-
+        # print("update")
+        self.update_vertical_lines()
+        self.update_horizontal_lines()
+        self.current_offset_y += self.SPEED  # increment this variable every time update() runs. Creates the impression of moving forward on the grid, by adding space "on top" of each line. 
 
 class GalaxyApp(App):
     pass
