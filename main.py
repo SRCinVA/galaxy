@@ -117,11 +117,15 @@ class MainWidget(Widget):
 
         return int(tr_x), int(tr_y) 
 
-    def update(self, dt):
+    def update(self, dt):  # the computing here is done in 2D, then later switched to 3D.
         # print("update")
         self.update_vertical_lines()
         self.update_horizontal_lines()
         self.current_offset_y += self.SPEED  # increment this variable every time update() runs. Creates the impression of moving forward on the grid, by adding space "on top" of each line. 
+
+        spacing_y = self.H_LINES_SPACING * self.height
+        if self.current_offset_y >= spacing_y: # basically, as soon as the offset exceeds the spacing, you need to create another line for the illusion of the looping line. 
+            self.current_offset_y -= spacing_y # # ... you just re-establish the offset as the same as the spacing, which in practice keeps inserting lines.
 
 class GalaxyApp(App):
     pass
