@@ -118,10 +118,12 @@ class MainWidget(Widget):
         return int(tr_x), int(tr_y) 
 
     def update(self, dt):  # the computing here is done in 2D, then later switched to 3D.
-        # print("update")
+        print("dt: " + str(dt*60))  # dt (delta time) is the difference in the time elapse from the last call of the function.
+        time_factor = dt*60  # this tells you how fast it's running compared to a baseline of 1.00 (fucntion is called 60 times per second)
         self.update_vertical_lines()
         self.update_horizontal_lines()
-        self.current_offset_y += self.SPEED  # increment this variable every time update() runs. Creates the impression of moving forward on the grid, by adding space "on top" of each line. 
+        self.current_offset_y += self.SPEED * time_factor  # increment this variable every time update() runs. Creates the impression of moving forward on the grid, by adding space "on top" of each line. 
+                                                            # multiplying in time_factor helps us adjust if things slow down. This keeps the game moving evenly.
 
         spacing_y = self.H_LINES_SPACING * self.height
         if self.current_offset_y >= spacing_y: # basically, as soon as the offset exceeds the spacing, you need to create another line for the illusion of the looping line. 
