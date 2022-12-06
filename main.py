@@ -1,3 +1,6 @@
+from kivy.config import Config
+Config.set('graphics', 'width', '900')
+Config.set('graphics', 'height', '400')
 from kivy.app import App
 from kivy.properties import NumericProperty
 from kivy.graphics.context_instructions import Color
@@ -20,6 +23,9 @@ class MainWidget(Widget):
 
     SPEED = 4
     current_offset_y = 0
+
+    SPEED_X = 3
+    current_offset_x = 0
 
     def __init__(self, **kwargs):
         super(MainWidget, self).__init__(**kwargs)
@@ -62,7 +68,7 @@ class MainWidget(Widget):
         spacing = self.V_LINES_SPACING * self.width
         offset = -int(self.V_NB_LINES/2) + 0.5 # the offset from the middle point is negative since we're starting from the left.
         for i in range(0, self.V_NB_LINES): # this loop assigns the lines to the points you've established
-            line_x = int(central_line_x + offset * spacing) # builds each line on the x-axis
+            line_x = central_line_x + offset * spacing + self.current_offset_x # builds each line on the x-axis
             
             x1, y1 = self.transform(line_x, 0)
             x2, y2 = self.transform(line_x, self.height)
@@ -83,13 +89,15 @@ class MainWidget(Widget):
         spacing = self.V_LINES_SPACING * self.width
         offset = int(self.V_NB_LINES/2) - 0.5
         
-        xmin = central_line_x - offset * spacing # the spacing must be the dynamic element here ... 
-        xmax = central_line_x + offset * spacing # this spreads out to the right from the center. 
+        # the spacing must be the dynamic element here ...
+        xmin = central_line_x - offset * spacing + self.current_offset_x
+        # this spreads out to the right from the center.
+        xmax = central_line_x + offset * spacing + self.current_offset_x
         spacing_y = self.H_LINES_SPACING * self.height
 
         for i in range(0, self.H_NB_LINES): # this loop assigns the lines to the points you've established
-            line_y = i * spacing_y - self.current_offset_y # builds each line on the y-axis starting from 0, depending on the total height of the window (wo that we can resize it)
-                                                            # unclear what the offset is doing here.
+            # builds each line on the y-axis starting from 0, depending on the total height of the window (wo that we can resize it)
+            line_y = i * spacing_y - self.current_offset_y # unclear what the offset is doing here.
             x1, y1 = self.transform(xmin, line_y)
             x2, y2 = self.transform(xmax, line_y)
 
@@ -118,7 +126,7 @@ class MainWidget(Widget):
         return int(tr_x), int(tr_y) 
 
     def update(self, dt):  # the computing here is done in 2D, then later switched to 3D.
-        print("dt: " + str(dt*60))  # dt (delta time) is the difference in the time elapse from the last call of the function.
+        # print("dt: " + str(dt*60))  # dt (delta time) is the difference in the time elapse from the last call of the function.
         time_factor = dt*60  # this tells you how fast it's running compared to a baseline of 1.00 (fucntion is called 60 times per second)
         self.update_vertical_lines()
         self.update_horizontal_lines()
@@ -128,6 +136,8 @@ class MainWidget(Widget):
         spacing_y = self.H_LINES_SPACING * self.height
         if self.current_offset_y >= spacing_y: # basically, as soon as the offset exceeds the spacing, you need to create another line for the illusion of the looping line. 
             self.current_offset_y -= spacing_y # # ... you just re-establish the offset as the same as the spacing, which in practice keeps inserting lines.
+
+        self.current_offset_x += self.SPEED_X * time_factor
 
 class GalaxyApp(App):
     pass
