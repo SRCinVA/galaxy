@@ -125,6 +125,15 @@ class MainWidget(Widget):
 
         return int(tr_x), int(tr_y) 
 
+    def on_touch_down(self, touch):
+        # return super().on_touch_down(touch)
+        # if touch.x < self.width/2:
+        pass
+
+    def on_touch_up(self, touch):
+        # return super().on_touch_up(touch)
+        pass
+
     def update(self, dt):  # the computing here is done in 2D, then later switched to 3D.
         # print("dt: " + str(dt*60))  # dt (delta time) is the difference in the time elapse from the last call of the function.
         time_factor = dt*60  # this tells you how fast it's running compared to a baseline of 1.00 (fucntion is called 60 times per second)
