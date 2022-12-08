@@ -24,7 +24,8 @@ class MainWidget(Widget):
     SPEED = 4
     current_offset_y = 0
 
-    SPEED_X = 3
+    SPEED_X = 12
+    current_speed_x = 0
     current_offset_x = 0
 
     def __init__(self, **kwargs):
@@ -127,12 +128,18 @@ class MainWidget(Widget):
 
     def on_touch_down(self, touch):
         # return super().on_touch_down(touch)
-        # if touch.x < self.width/2:
-        pass
+        if touch.x < self.width/2:
+            print("<-")
+            self.current_speed_x = self.SPEED_X
+        else:
+            print("->")
+            self.current_speed_x = -self.SPEED_X
+
 
     def on_touch_up(self, touch):
         # return super().on_touch_up(touch)
-        pass
+        print("UP")
+        self.current_speed_x = 0 # we want this to be zero (which implies no movement)
 
     def update(self, dt):  # the computing here is done in 2D, then later switched to 3D.
         # print("dt: " + str(dt*60))  # dt (delta time) is the difference in the time elapse from the last call of the function.
@@ -146,7 +153,7 @@ class MainWidget(Widget):
         if self.current_offset_y >= spacing_y: # basically, as soon as the offset exceeds the spacing, you need to create another line for the illusion of the looping line. 
             self.current_offset_y -= spacing_y # # ... you just re-establish the offset as the same as the spacing, which in practice keeps inserting lines.
 
-        self.current_offset_x += self.SPEED_X * time_factor
+        self.current_offset_x += self.current_speed_x * time_factor
 
 class GalaxyApp(App):
     pass
