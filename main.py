@@ -7,7 +7,7 @@ from kivy.graphics.context_instructions import Color
 from kivy.graphics.vertex_instructions import Line
 from kivy.uix.widget import Widget
 from kivy.properties import Clock
-
+from kivy.core.window import Window
 
 class MainWidget(Widget):
     perspective_point_x = NumericProperty(0)
@@ -33,8 +33,30 @@ class MainWidget(Widget):
         print("INIT W: " + str(self.width) + " H: " + str(self.height)) # from the __init__ function, the window can report its default size
         self.init_vertical_lines() # unclear why you're calling this function from __init__
         self.init_horizontal_lines()
+        
+        self.keyboard = Window.request_keyboard(self.keyboard_closed, self)
+        self.keyboard.bind(on_key_down=self.on_keyboard_down)
+        self.keyboard.bind(on_key_up=self.on_keyboard_up) # also need to know when we release the key
+
         Clock.schedule_interval(self.update, 1.0/60.0)  # using the update function for recreating the lines for the scrolling effect. 
                                                         # calling it 60 times per second
+
+    def keyboard_closed(self):
+        self._keyboard.unbind(on_key_down=self.on_keyboard_down)
+        self._keyboard = None
+
+    def on_keyboard_down(self, keyboard, keycode, text, modifiers):
+        if keycode[1] == 'w':
+            self.player1.center_y += 10
+        elif keycode[1] == 's':
+            self.player1.center_y -= 10
+        elif keycode[1] == 'up':
+            self.player2.center_y += 10
+        elif keycode[1] == 'down':
+            self.player2.center_y -= 10
+        return True
+
+
 
     def on_parent(self, widget, parent):  # this is when we attach the widget to the app.
         # print("ON PARENT INIT W: " + str(self.width) + " H: " + str(self.height))
