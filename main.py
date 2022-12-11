@@ -41,22 +41,10 @@ class MainWidget(Widget):
         Clock.schedule_interval(self.update, 1.0/60.0)  # using the update function for recreating the lines for the scrolling effect. 
                                                         # calling it 60 times per second
 
-    def keyboard_closed(self):
+    def keyboard_closed(self): # not sure what this is doing ... ??
         self._keyboard.unbind(on_key_down=self.on_keyboard_down)
+        self._keyboard.unbind(on_key_up=self.on_keyboard_up)
         self._keyboard = None
-
-    def on_keyboard_down(self, keyboard, keycode, text, modifiers):
-        if keycode[1] == 'w':
-            self.player1.center_y += 10
-        elif keycode[1] == 's':
-            self.player1.center_y -= 10
-        elif keycode[1] == 'up':
-            self.player2.center_y += 10
-        elif keycode[1] == 'down':
-            self.player2.center_y -= 10
-        return True
-
-
 
     def on_parent(self, widget, parent):  # this is when we attach the widget to the app.
         # print("ON PARENT INIT W: " + str(self.width) + " H: " + str(self.height))
@@ -148,15 +136,25 @@ class MainWidget(Widget):
 
         return int(tr_x), int(tr_y) 
 
+    def on_keyboard_down(self, keyboard, keycode, text, modifiers):
+        if keycode[1] == 'left':
+            self.current_speed_x = self.SPEED_X  # not sure why he's doing this ...
+
+        elif keycode[1] == 'right':
+            self.current_speed_x = -self.SPEED_X # how does "negative speed" work ...?
+        return True
+
+    def on_keyboard_up(self, keyboard, keycode):
+        self.current_speed_x = 0
+
     def on_touch_down(self, touch):
         # return super().on_touch_down(touch)
         if touch.x < self.width/2:
-            print("<-")
+            # print("<-")
             self.current_speed_x = self.SPEED_X
         else:
-            print("->")
+            # print("->")
             self.current_speed_x = -self.SPEED_X
-
 
     def on_touch_up(self, touch):
         # return super().on_touch_up(touch)
