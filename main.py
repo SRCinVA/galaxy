@@ -1,13 +1,16 @@
 from kivy.config import Config
+
 Config.set('graphics', 'width', '900')
 Config.set('graphics', 'height', '400')
+
+from kivy import platform # to determine if the platform is desktop or mobile
+from kivy.core.window import Window  # this needs to come after the configuration settings (can't remember why ...)
 from kivy.app import App
 from kivy.properties import NumericProperty
 from kivy.graphics.context_instructions import Color
 from kivy.graphics.vertex_instructions import Line
 from kivy.uix.widget import Widget
 from kivy.properties import Clock
-from kivy.core.window import Window
 
 class MainWidget(Widget):
     perspective_point_x = NumericProperty(0)
@@ -34,12 +37,19 @@ class MainWidget(Widget):
         self.init_vertical_lines() # unclear why you're calling this function from __init__
         self.init_horizontal_lines()
         
-        self.keyboard = Window.request_keyboard(self.keyboard_closed, self)
-        self.keyboard.bind(on_key_down=self.on_keyboard_down)
-        self.keyboard.bind(on_key_up=self.on_keyboard_up) # also need to know when we release the key
+        if self.is_desktop():  # we only need to configure the keyboard if it's a desktop.
+            self.keyboard = Window.request_keyboard(self.keyboard_closed, self)
+            self.keyboard.bind(on_key_down=self.on_keyboard_down)
+            self.keyboard.bind(on_key_up=self.on_keyboard_up) # also need to know when we release the key
 
         Clock.schedule_interval(self.update, 1.0/60.0)  # using the update function for recreating the lines for the scrolling effect. 
                                                         # calling it 60 times per second
+
+    def is_desktop(self):  # we call this function above in the init()
+        if platform in ("Linux", "win", "macosx"):
+            return True # meaning, it's a desktop computer
+        else:
+            return False
 
     def keyboard_closed(self): # not sure what this is doing ... ??
         self._keyboard.unbind(on_key_down=self.on_keyboard_down)
