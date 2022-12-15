@@ -60,6 +60,13 @@ class MainWidget(Widget):
             for i in range(0, self.V_NB_LINES): # this loop will create the spacing for the lines.
                 self.vertical_lines.append(Line()) # (I believe) as you create the spaces you'll be appending them to the Line list. 
 
+    def get_line_x_from_index(self, index):
+        central_line_x = self.perspective_point_x  # not sure why this is better than int(self.width/2)
+        spacing = self.V_LINES_SPACING * self.width
+        offset = index - 0.5  # whatever the index is, we want to be halfway on the left.
+        line_x = central_line_x + offset * spacing + self.current_offset_x # self.current_offset_x tells us how far from the true center_x we need to go.
+        return line_x
+
     def update_vertical_lines(self):
         central_line_x = int(self.width/2)
         # self.line.points = [center_x, 0, center_x, 100]
