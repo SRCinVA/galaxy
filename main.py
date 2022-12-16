@@ -18,8 +18,8 @@ class MainWidget(Widget):
     perspective_point_x = NumericProperty(0)
     perspective_point_y = NumericProperty(0)
 
-    V_NB_LINES = 10 
-    V_LINES_SPACING = .25  # 10% of the screen width
+    V_NB_LINES = 4
+    V_LINES_SPACING = .1  # 10% of the screen width
     vertical_lines = []  # this will be where we keep the lists of vertical lines
 
     H_NB_LINES = 15
@@ -67,19 +67,14 @@ class MainWidget(Widget):
         line_x = central_line_x + offset * spacing + self.current_offset_x # self.current_offset_x tells us how far from the true center_x we need to go.
         return line_x
 
-    def update_vertical_lines(self):
-        central_line_x = int(self.width/2)
-        # self.line.points = [center_x, 0, center_x, 100]
-        spacing = self.V_LINES_SPACING * self.width
-        offset = -int(self.V_NB_LINES/2) + 0.5 # the offset from the middle point is negative since we're starting from the left.
-        for i in range(0, self.V_NB_LINES): # this loop assigns the lines to the points you've established
-            line_x = central_line_x + offset * spacing + self.current_offset_x # builds each line on the x-axis
-            
+    def update_vertical_lines(self): # setting up the range of indices is a bit tricky, as shown below.
+        start_index = -int(self.V_NB_LINES/2) + 1 # negative because we're starting the index at -1 (making 0 the middle)
+        for i in range(start_index, start_index + self.V_NB_LINES): # this loop assigns the lines to the points you've established
+            line_x = self.get_line_x_from_index(i)
             x1, y1 = self.transform(line_x, 0)
             x2, y2 = self.transform(line_x, self.height)
 
             self.vertical_lines[i].points = [x1, y1, x2, y2] # places each line on the x and y axes
-            offset += 1 # to move through each of the 7 lines
 
 
     def init_horizontal_lines(self):
@@ -90,14 +85,11 @@ class MainWidget(Widget):
                 self.horizontal_lines.append(Line())
 
     def update_horizontal_lines(self):
-        central_line_x = int(self.width/2)
-        spacing = self.V_LINES_SPACING * self.width
-        offset = int(self.V_NB_LINES/2) - 0.5
-        
-        # the spacing must be the dynamic element here ...
-        xmin = central_line_x - offset * spacing + self.current_offset_x
-        # this spreads out to the right from the center.
-        xmax = central_line_x + offset * spacing + self.current_offset_x
+        start_index = -int(self.V_NB_LINES/2) + 1
+        end_index = start_index + self.V_NB_LINES -1
+
+        xmin = self.get_line_x_from_index(start_index)
+        xmax = self.get_line_x_from_index(end_index)
         spacing_y = self.H_LINES_SPACING * self.height
 
         for i in range(0, self.H_NB_LINES): # this loop assigns the lines to the points you've established
@@ -113,14 +105,14 @@ class MainWidget(Widget):
         time_factor = dt*60  # this tells you how fast it's running compared to a baseline of 1.00 (fucntion is called 60 times per second)
         self.update_vertical_lines()
         self.update_horizontal_lines()
-        self.current_offset_y += self.SPEED * time_factor  # increment this variable every time update() runs. Creates the impression of moving forward on the grid, by adding space "on top" of each line. 
+        # self.current_offset_y += self.SPEED * time_factor  # increment this variable every time update() runs. Creates the impression of moving forward on the grid, by adding space "on top" of each line. 
                                                             # multiplying in time_factor helps us adjust if things slow down. This keeps the game moving evenly.
 
         spacing_y = self.H_LINES_SPACING * self.height
         if self.current_offset_y >= spacing_y: # basically, as soon as the offset exceeds the spacing, you need to create another line for the illusion of the looping line. 
             self.current_offset_y -= spacing_y # # ... you just re-establish the offset as the same as the spacing, which in practice keeps inserting lines.
 
-        self.current_offset_x += self.current_speed_x * time_factor
+        # self.current_offset_x += self.current_speed_x * time_factor
 
 class GalaxyApp(App):
     pass
