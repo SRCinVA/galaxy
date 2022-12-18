@@ -11,6 +11,7 @@ from kivy.graphics.context_instructions import Color
 from kivy.graphics.vertex_instructions import Line
 from kivy.uix.widget import Widget
 from kivy.properties import Clock
+from kivy.graphics.vertex_instructions import Quad
 
 class MainWidget(Widget):
     from transforms import transform, transform_2D, transform_perspective
@@ -58,6 +59,13 @@ class MainWidget(Widget):
         else:
             return False
 
+
+    def init_tiles(self):
+        with self.canvas:
+            Color(1, 1, 1)
+            self.tile = Quad()
+
+
     def init_vertical_lines(self):
         with self.canvas:
             Color(1,1,1)
@@ -81,6 +89,18 @@ class MainWidget(Widget):
         x = self.get_line_x_from_index(ti_x)
         y = self.get_line_y_from_index(ti_y)
         return x, y
+    
+    def update_tiles(self):
+        xmin, ymin = self.get_tile_coordinates(self.ti_x, self.ti_y)
+        xmax, ymax = self.get_tile_coordinates(self.ti_x + 1, self.ti_y + 1)
+        # Actually, we are not doing this:
+        # xmax, ymin = self.get_tile_coordinates(self.ti_x + 1, self.ti_y - 1)
+        # xmin, ymax = self.get_tile_coordinates(self.ti_x - 1, self.ti_y + 1)
+        
+        x1, y1 = self.transform()
+
+        self.tile.points = [x1, y1, x2, y2, x3, y3, x4, y4]
+
 
     def update_vertical_lines(self): # setting up the range of indices is a bit tricky, as shown below.
         start_index = -int(self.V_NB_LINES/2) + 1 # negative because we're starting the index at -1 (making 0 the middle)
@@ -118,6 +138,7 @@ class MainWidget(Widget):
         time_factor = dt*60  # this tells you how fast it's running compared to a baseline of 1.00 (fucntion is called 60 times per second)
         self.update_vertical_lines()
         self.update_horizontal_lines()
+        self.update_tiles()
         # self.current_offset_y += self.SPEED * time_factor  # increment this variable every time update() runs. Creates the impression of moving forward on the grid, by adding space "on top" of each line. 
                                                             # multiplying in time_factor helps us adjust if things slow down. This keeps the game moving evenly.
 
