@@ -33,11 +33,16 @@ class MainWidget(Widget):
     current_speed_x = 0
     current_offset_x = 0
 
+    tile = None
+    ti_x = 0
+    ti_y = 0
+
     def __init__(self, **kwargs):
         super(MainWidget, self).__init__(**kwargs)
         print("INIT W: " + str(self.width) + " H: " + str(self.height)) # from the __init__ function, the window can report its default size
         self.init_vertical_lines() # unclear why you're calling this function from __init__
         self.init_horizontal_lines()
+        self.init_tiles()
         
         if self.is_desktop():  # we only need to configure the keyboard if it's a desktop.
             self.keyboard = Window.request_keyboard(self.keyboard_closed, self)
@@ -71,6 +76,11 @@ class MainWidget(Widget):
         spacing_y = self.H_LINES_SPACING * self.height
         line_y = index * spacing_y - self.current_offset_y # current_offset_y is what creates the illusion of movement in the game. As the index increases, you populate the horizontal lines upwards
         return line_y
+
+    def get_tile_coordinates(self, ti_x, ti_y):
+        x = self.get_line_x_from_index(ti_x)
+        y = self.get_line_y_from_index(ti_y)
+        return x, y
 
     def update_vertical_lines(self): # setting up the range of indices is a bit tricky, as shown below.
         start_index = -int(self.V_NB_LINES/2) + 1 # negative because we're starting the index at -1 (making 0 the middle)
