@@ -35,8 +35,8 @@ class MainWidget(Widget):
     current_offset_x = 0
 
     tile = None
-    ti_x = 0
-    ti_y = 0
+    ti_x = 1
+    ti_y = 2
 
     def __init__(self, **kwargs):
         super(MainWidget, self).__init__(**kwargs)
@@ -97,7 +97,10 @@ class MainWidget(Widget):
         # xmax, ymin = self.get_tile_coordinates(self.ti_x + 1, self.ti_y - 1)
         # xmin, ymax = self.get_tile_coordinates(self.ti_x - 1, self.ti_y + 1)
         
-        x1, y1 = self.transform()
+        x1, y1 = self.transform(xmin, ymin)
+        x2, y2 = self.transform(xmin, ymax)
+        x3, y3 = self.transform(xmax, ymax)
+        x4, y4 = self.transform(xmax, ymin)
 
         self.tile.points = [x1, y1, x2, y2, x3, y3, x4, y4]
 
