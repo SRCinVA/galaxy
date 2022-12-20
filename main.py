@@ -27,8 +27,9 @@ class MainWidget(Widget):
     H_LINES_SPACING = .1   # this is the percentage in screen height
     horizontal_lines = []  # this will be where we keep the lists of vertical lines
 
-    SPEED = 4
+    SPEED = 1
     current_offset_y = 0
+    current_y_loop = 0
 
     SPEED_X = 12
     current_speed_x = 0
@@ -86,6 +87,7 @@ class MainWidget(Widget):
         return line_y
 
     def get_tile_coordinates(self, ti_x, ti_y):
+        ti_y = ti_y - self.current_y_loop  # this re-assigns the tile to the next spot in the index. As a result, it disappears off the screen.
         x = self.get_line_x_from_index(ti_x)
         y = self.get_line_y_from_index(ti_y)
         return x, y
@@ -142,12 +144,13 @@ class MainWidget(Widget):
         self.update_vertical_lines()
         self.update_horizontal_lines()
         self.update_tiles()
-        # self.current_offset_y += self.SPEED * time_factor  # increment this variable every time update() runs. Creates the impression of moving forward on the grid, by adding space "on top" of each line. 
+        self.current_offset_y += self.SPEED * time_factor  # increment this variable every time update() runs. Creates the impression of moving forward on the grid, by adding space "on top" of each line. 
                                                             # multiplying in time_factor helps us adjust if things slow down. This keeps the game moving evenly.
 
         spacing_y = self.H_LINES_SPACING * self.height
         if self.current_offset_y >= spacing_y: # basically, as soon as the offset exceeds the spacing, you need to create another line for the illusion of the looping line. 
             self.current_offset_y -= spacing_y # # ... you just re-establish the offset as the same as the spacing, which in practice keeps inserting lines.
+            self.current_y_loop += 1
 
         # self.current_offset_x += self.current_speed_x * time_factor
 
