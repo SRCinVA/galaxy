@@ -35,7 +35,7 @@ class MainWidget(Widget):
     current_speed_x = 0
     current_offset_x = 0
 
-    NB_TILES = 4
+    NB_TILES = 8
     tiles = []
     tiles_coordinates = []
 
@@ -70,7 +70,7 @@ class MainWidget(Widget):
 
     def generate_tiles_coordinates(self):
         for i in range(0, self.NB_TILES):
-            self.tiles_coordinates.append((0, i)) # no explanation for why he is doing it this way ...
+            self.tiles_coordinates.append((0, i)) # these will be in a straight line, so x is 0, and y is populated by looping through the index (?)
 
 
     def init_vertical_lines(self):
@@ -99,18 +99,21 @@ class MainWidget(Widget):
         return x, y
     
     def update_tiles(self):
-        xmin, ymin = self.get_tile_coordinates(self.ti_x, self.ti_y)
-        xmax, ymax = self.get_tile_coordinates(self.ti_x + 1, self.ti_y + 1)
-        # Actually, we are not doing this:
-        # xmax, ymin = self.get_tile_coordinates(self.ti_x + 1, self.ti_y - 1)
-        # xmin, ymax = self.get_tile_coordinates(self.ti_x - 1, self.ti_y + 1)
-        
-        x1, y1 = self.transform(xmin, ymin)
-        x2, y2 = self.transform(xmin, ymax)
-        x3, y3 = self.transform(xmax, ymax)
-        x4, y4 = self.transform(xmax, ymin)
+        for i in range(0, self.NB_TILES): # you loop through the tuples and break out tile coordinates from each.
+            tile = self.tiles[i] # unclear why he did this ...
+            tile_coordinates = self.tiles_coordinates[i]
+            xmin, ymin = self.get_tile_coordinates(tile_coordinates[0], tile_coordinates[1])
+            xmax, ymax = self.get_tile_coordinates(tile_coordinates[0] + 1, tile_coordinates[1] + 1)
+            # Actually, we are not doing this:
+            # xmax, ymin = self.get_tile_coordinates(self.ti_x + 1, self.ti_y - 1)
+            # xmin, ymax = self.get_tile_coordinates(self.ti_x - 1, self.ti_y + 1)
+            
+            x1, y1 = self.transform(xmin, ymin)
+            x2, y2 = self.transform(xmin, ymax)
+            x3, y3 = self.transform(xmax, ymax)
+            x4, y4 = self.transform(xmax, ymin)
 
-        self.tile.points = [x1, y1, x2, y2, x3, y3, x4, y4]
+            tile.points = [x1, y1, x2, y2, x3, y3, x4, y4]
 
 
     def update_vertical_lines(self): # setting up the range of indices is a bit tricky, as shown below.
