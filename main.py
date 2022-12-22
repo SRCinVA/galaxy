@@ -35,9 +35,9 @@ class MainWidget(Widget):
     current_speed_x = 0
     current_offset_x = 0
 
-    tile = None
-    ti_x = 1
-    ti_y = 2
+    NB_TILES = 4
+    tiles = []
+    tiles_coordinates = []
 
     def __init__(self, **kwargs):
         super(MainWidget, self).__init__(**kwargs)
@@ -45,7 +45,8 @@ class MainWidget(Widget):
         self.init_vertical_lines() # unclear why you're calling this function from __init__
         self.init_horizontal_lines()
         self.init_tiles()
-        
+        self.generate_tiles_coordinates()
+
         if self.is_desktop():  # we only need to configure the keyboard if it's a desktop.
             self.keyboard = Window.request_keyboard(self.keyboard_closed, self)
             self.keyboard.bind(on_key_down=self.on_keyboard_down)
@@ -64,7 +65,12 @@ class MainWidget(Widget):
     def init_tiles(self):
         with self.canvas:
             Color(1, 1, 1)
-            self.tile = Quad()
+            for i in range(0, self.NB_TILES):
+                self.tiles.append(Quad())  # not sure why Quad() is embedded in append() ...
+
+    def generate_tiles_coordinates(self):
+        for i in range(0, self.NB_TILES):
+            self.tiles_coordinates.append((0, i)) # no explanation for why he is doing it this way ...
 
 
     def init_vertical_lines(self):
