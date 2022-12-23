@@ -69,9 +69,18 @@ class MainWidget(Widget):
                 self.tiles.append(Quad())  # not sure why Quad() is embedded in append() ...
 
     def generate_tiles_coordinates(self):
-        for i in range(0, self.NB_TILES):
+        
+        # clean coordinates that are out of the screen
+        for i in range(len(self.tiles_coordinates)-1, -1, -1):  # we peel off the most recent tile to exit the screen, decrementing (last -1) as it files down to zero (the middle -1). 
+            if self.tiles_coordinates[i][1] < self.current_y_loop: # if a tile is less than the current self loop
+                del self.tiles_coordinates[i] # ... then we delete that tile.
+
+        print("foo1")
+
+        for i in range((len(self.tiles_coordinates)), self.NB_TILES): # we start from the number of elements here (not 0) because this is looping infinitely.
             self.tiles_coordinates.append((0, i)) # these will be in a straight line, so x is 0, and y is populated by looping through the index (?)
 
+        print("foo2")
 
     def init_vertical_lines(self):
         with self.canvas:
@@ -159,8 +168,8 @@ class MainWidget(Widget):
         spacing_y = self.H_LINES_SPACING * self.height
         if self.current_offset_y >= spacing_y: # basically, as soon as the offset exceeds the spacing, you need to create another line for the illusion of the looping line. 
             self.current_offset_y -= spacing_y # # ... you just re-establish the offset as the same as the spacing, which in practice keeps inserting lines.
-            self.current_y_loop += 1
-
+            self.current_y_loop += 1 # (it seems) this updates the current y loop 
+            self.generate_tiles_coordinates() # ?? this keeps creating the tiles infinitely
         # self.current_offset_x += self.current_speed_x * time_factor
 
 class GalaxyApp(App):
