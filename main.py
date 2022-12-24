@@ -70,15 +70,21 @@ class MainWidget(Widget):
 
     def generate_tiles_coordinates(self):
         
+        last_y = 0  # we need this for adding another figure. Here, we just need to initialize it.
         # clean coordinates that are out of the screen
         for i in range(len(self.tiles_coordinates)-1, -1, -1):  # we peel off the most recent tile to exit the screen, decrementing (last -1) as it files down to zero (the middle -1). 
             if self.tiles_coordinates[i][1] < self.current_y_loop: # if a tile is less than the current self loop
                 del self.tiles_coordinates[i] # ... then we delete that tile.
 
+        if len(self.tiles_coordinates) > 0:
+            last_coordinates = self.tiles_coordinates[-1] # don't understand this line at all.
+            last_y = last_coordinates[1] + 1  # don't understand this one, either
+        
         print("foo1")
 
         for i in range((len(self.tiles_coordinates)), self.NB_TILES): # we start from the number of elements here (not 0) because this is looping infinitely.
-            self.tiles_coordinates.append((0, i)) # these will be in a straight line, so x is 0, and y is populated by looping through the index (?)
+            self.tiles_coordinates.append((0, last_y)) # these will be in a straight line, so x is 0, and y is populated by the "last_y"
+            last_y += 1
 
         print("foo2")
 
