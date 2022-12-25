@@ -12,6 +12,7 @@ from kivy.graphics.vertex_instructions import Line
 from kivy.uix.widget import Widget
 from kivy.properties import Clock
 from kivy.graphics.vertex_instructions import Quad
+import random
 
 class MainWidget(Widget):
     from transforms import transform, transform_2D, transform_perspective
@@ -69,7 +70,7 @@ class MainWidget(Widget):
                 self.tiles.append(Quad())  # not sure why Quad() is embedded in append() ...
 
     def generate_tiles_coordinates(self):
-        
+        last_x = 0 
         last_y = 0  # we need this for adding another figure. Here, we just need to initialize it.
         # clean coordinates that are out of the screen
         for i in range(len(self.tiles_coordinates)-1, -1, -1):  # we peel off the most recent tile to exit the screen, decrementing (last -1) as it files down to zero (the middle -1). 
@@ -78,12 +79,17 @@ class MainWidget(Widget):
 
         if len(self.tiles_coordinates) > 0:
             last_coordinates = self.tiles_coordinates[-1] # don't understand this line at all.
+            last_x = last_coordinates[0]  # we don't need to reassign this, because it's moving over from the same x as the last tile, to create a bridge. [0] is he x-coordinate of the tuple.
             last_y = last_coordinates[1] + 1  # don't understand this one, either
         
         print("foo1")
 
         for i in range((len(self.tiles_coordinates)), self.NB_TILES): # we start from the number of elements here (not 0) because this is looping infinitely.
-            self.tiles_coordinates.append((0, last_y)) # these will be in a straight line, so x is 0, and y is populated by the "last_y"
+            r = random.randint(0,2)  # min-max to make it switch from side to side
+            self.tiles_coordinates.append((last_x, last_y)) # these will be in a straight line, so x is 0, and y is populated by the "last_y"
+            if (r == 1):
+                pass
+            
             last_y += 1
 
         print("foo2")
