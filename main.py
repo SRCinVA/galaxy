@@ -36,7 +36,7 @@ class MainWidget(Widget):
     current_speed_x = 0
     current_offset_x = 0
 
-    NB_TILES = 8
+    NB_TILES = 4
     tiles = []
     tiles_coordinates = []
 
@@ -84,12 +84,23 @@ class MainWidget(Widget):
         
         print("foo1")
 
-        for i in range((len(self.tiles_coordinates)), self.NB_TILES): # we start from the number of elements here (not 0) because this is looping infinitely.
+        for i in range(len(self.tiles_coordinates), self.NB_TILES): # we start from the number of elements here (not 0) because this is looping infinitely.
             r = random.randint(0,2)  # min-max to make it switch from side to side
+            # 0 -> straight
+            # 1 -> right
+            # 2 -> left
             self.tiles_coordinates.append((last_x, last_y)) # these will be in a straight line, so x is 0, and y is populated by the "last_y"
             if (r == 1):
-                pass
-            
+                last_x += 1 # this is how you encode bumping the path over to the right.
+                self.tiles_coordinates.append((last_x, last_y)) # ... generates that tile
+                last_y += 1 # this knocks the path upward on y axis, to keep advancing.
+                self.tiles_coordinates.append((last_x, last_y)) # ... generates the next tile for upward.
+            if (r == 2):
+                last_x -= 1 # this is how you encode bumping the path over to the left.
+                self.tiles_coordinates.append((last_x, last_y)) # ... generates that tile
+                last_y += 1 # this knocks the path upward on y axis, to keep advancing.
+                self.tiles_coordinates.append((last_x, last_y)) # ... generates the next tile for upward.
+
             last_y += 1
 
         print("foo2")
