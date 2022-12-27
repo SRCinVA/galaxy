@@ -20,15 +20,15 @@ class MainWidget(Widget):
     perspective_point_x = NumericProperty(0)
     perspective_point_y = NumericProperty(0)
 
-    V_NB_LINES = 4
-    V_LINES_SPACING = .1  # 10% of the screen width
+    V_NB_LINES = 8
+    V_LINES_SPACING = .2  # 10% of the screen width
     vertical_lines = []  # this will be where we keep the lists of vertical lines
 
     H_NB_LINES = 15
     H_LINES_SPACING = .1   # this is the percentage in screen height
     horizontal_lines = []  # this will be where we keep the lists of vertical lines
 
-    SPEED = 1
+    SPEED = 4
     current_offset_y = 0
     current_y_loop = 0
 
@@ -36,7 +36,7 @@ class MainWidget(Widget):
     current_speed_x = 0
     current_offset_x = 0
 
-    NB_TILES = 4
+    NB_TILES = 16
     tiles = []
     tiles_coordinates = []
 
@@ -89,6 +89,16 @@ class MainWidget(Widget):
             # 0 -> straight
             # 1 -> right
             # 2 -> left
+
+            start_index = -int(self.V_NB_LINES/2) + 1
+            end_index = start_index + self.V_NB_LINES - 1
+
+            # This is how you keep the lines within the borders you intended:
+            if last_x <= start_index:
+                r = 1  # if alrady completely over to the right, then you force the value of 1 to get it back on track
+            if last_x >= end_index:
+                r = 2
+
             self.tiles_coordinates.append((last_x, last_y)) # these will be in a straight line, so x is 0, and y is populated by the "last_y"
             if (r == 1):
                 last_x += 1 # this is how you encode bumping the path over to the right.
@@ -193,7 +203,7 @@ class MainWidget(Widget):
             self.current_offset_y -= spacing_y # # ... you just re-establish the offset as the same as the spacing, which in practice keeps inserting lines.
             self.current_y_loop += 1 # (it seems) this updates the current y loop 
             self.generate_tiles_coordinates() # ?? this keeps creating the tiles infinitely
-        # self.current_offset_x += self.current_speed_x * time_factor
+        self.current_offset_x += self.current_speed_x * time_factor
 
 class GalaxyApp(App):
     pass
