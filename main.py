@@ -46,6 +46,7 @@ class MainWidget(Widget):
         self.init_vertical_lines() # unclear why you're calling this function from __init__
         self.init_horizontal_lines()
         self.init_tiles()
+        self.pre_fill_tiles_coordinates()
         self.generate_tiles_coordinates()
 
         if self.is_desktop():  # we only need to configure the keyboard if it's a desktop.
@@ -68,6 +69,11 @@ class MainWidget(Widget):
             Color(1, 1, 1)
             for i in range(0, self.NB_TILES):
                 self.tiles.append(Quad())  # not sure why Quad() is embedded in append() ...
+
+    def pre_fill_tiles_coordinates(self):
+        for i in range(0,20):
+            self.tiles_coordinates.append((0, i)) # it starts out empty, but then you append the coordinates as tuples to the list.
+                                                # notice that it's in the center, so it's 0 for the x and i for the y (which will reach 10).
 
     def generate_tiles_coordinates(self):
         last_x = 0 
@@ -96,7 +102,7 @@ class MainWidget(Widget):
             # This is how you keep the lines within the borders you intended:
             if last_x <= start_index:
                 r = 1  # if alrady completely over to the right, then you force the value of 1 to get it back on track
-            if last_x >= end_index:
+            if last_x >= end_index - 1: # added this -1 to keep it within the borders (per comments)
                 r = 2
 
             self.tiles_coordinates.append((last_x, last_y)) # these will be in a straight line, so x is 0, and y is populated by the "last_y"
