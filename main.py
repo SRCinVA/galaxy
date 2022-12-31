@@ -9,6 +9,7 @@ from kivy.app import App
 from kivy.properties import NumericProperty
 from kivy.graphics.context_instructions import Color
 from kivy.graphics.vertex_instructions import Line
+from kivy.graphics.vertex_instructions import Triangle
 from kivy.uix.widget import Widget
 from kivy.properties import Clock
 from kivy.graphics.vertex_instructions import Quad
@@ -40,6 +41,11 @@ class MainWidget(Widget):
     tiles = []
     tiles_coordinates = []
 
+    SHIP_WIDTH = .1
+    SHIP_HEIGHT = 0.035
+    SHIP_BASE_Y = 0.04 
+    ship = None
+
     def __init__(self, **kwargs):
         super(MainWidget, self).__init__(**kwargs)
         print("INIT W: " + str(self.width) + " H: " + str(self.height)) # from the __init__ function, the window can report its default size
@@ -62,6 +68,11 @@ class MainWidget(Widget):
             return True # meaning, it's a desktop computer
         else:
             return False
+
+    def init_ship(self):
+        with self.canvas:
+            Color(0,0,0)
+            self.ship = Triangle()  # the ship will be a triangle (obviously)
 
 
     def init_tiles(self):
