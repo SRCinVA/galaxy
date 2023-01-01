@@ -41,6 +41,7 @@ class MainWidget(Widget):
     tiles = []
     tiles_coordinates = []
 
+    # these values are all percentages of the screen 
     SHIP_WIDTH = .1
     SHIP_HEIGHT = 0.035
     SHIP_BASE_Y = 0.04 
@@ -52,6 +53,7 @@ class MainWidget(Widget):
         self.init_vertical_lines() # unclear why you're calling this function from __init__
         self.init_horizontal_lines()
         self.init_tiles()
+        self.init_ship() # path needs to come first; otherwise, the ship will be under it.
         self.pre_fill_tiles_coordinates()
         self.generate_tiles_coordinates()
 
@@ -74,6 +76,16 @@ class MainWidget(Widget):
             Color(0,0,0)
             self.ship = Triangle()  # the ship will be a triangle (obviously)
 
+    def update_ship(self):
+        center_x = self.width/2
+        base_y = self.SHIP_BASE_Y * self.height # guess this is a relative measurement * height of the screen
+        ship_half_width = self.SHIP_WIDTH * self.width/2
+        ship_height = self.SHIP_HEIGHT * self.height
+        x1, y1 = self.transform(center_x - ship_half_width, base_y) # x1, y1 is the bottom left of the triangle
+        x2, y2 = self.transform(center_x, base_y + ship_height)
+        x3, y3 = self.transform(center_x + ship_half_width, base_y)
+        
+        self.ship.points = [x1, y1, x2, x2, x3, y3]
 
     def init_tiles(self):
         with self.canvas:
