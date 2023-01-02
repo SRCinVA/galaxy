@@ -77,15 +77,16 @@ class MainWidget(Widget):
             self.ship = Triangle()  # the ship will be a triangle (obviously)
 
     def update_ship(self):
-        center_x = self.width/2
+        center_x = self.width / 2
         base_y = self.SHIP_BASE_Y * self.height # guess this is a relative measurement * height of the screen
-        ship_half_width = self.SHIP_WIDTH * self.width/2
+        ship_half_width = self.SHIP_WIDTH * self.width / 2
         ship_height = self.SHIP_HEIGHT * self.height
+        
         x1, y1 = self.transform(center_x - ship_half_width, base_y) # x1, y1 is the bottom left of the triangle
         x2, y2 = self.transform(center_x, base_y + ship_height)
         x3, y3 = self.transform(center_x + ship_half_width, base_y)
         
-        self.ship.points = [x1, y1, x2, x2, x3, y3]
+        self.ship.points = [x1, y1, x2, y2, x3, y3]
 
     def init_tiles(self):
         with self.canvas:
@@ -224,6 +225,7 @@ class MainWidget(Widget):
         self.update_vertical_lines()
         self.update_horizontal_lines()
         self.update_tiles()
+        self.update_ship()
         self.current_offset_y += self.SPEED * time_factor  # increment this variable every time update() runs. Creates the impression of moving forward on the grid, by adding space "on top" of each line. 
                                                             # multiplying in time_factor helps us adjust if things slow down. This keeps the game moving evenly.
 
