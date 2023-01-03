@@ -22,18 +22,18 @@ class MainWidget(Widget):
     perspective_point_y = NumericProperty(0)
 
     V_NB_LINES = 8
-    V_LINES_SPACING = .2  # 10% of the screen width
+    V_LINES_SPACING = .4  # 10% of the screen width
     vertical_lines = []  # this will be where we keep the lists of vertical lines
 
     H_NB_LINES = 15
     H_LINES_SPACING = .1   # this is the percentage in screen height
     horizontal_lines = []  # this will be where we keep the lists of vertical lines
 
-    SPEED = 4
+    SPEED = .8
     current_offset_y = 0
     current_y_loop = 0
 
-    SPEED_X = 12
+    SPEED_X = 3.0
     current_speed_x = 0
     current_offset_x = 0
 
@@ -226,7 +226,9 @@ class MainWidget(Widget):
         self.update_horizontal_lines()
         self.update_tiles()
         self.update_ship()
-        self.current_offset_y += self.SPEED * time_factor  # increment this variable every time update() runs. Creates the impression of moving forward on the grid, by adding space "on top" of each line. 
+
+        speed_y = self.SPEED * self.height / 100
+        self.current_offset_y += speed_y * time_factor  # increment this variable every time update() runs. Creates the impression of moving forward on the grid, by adding space "on top" of each line. 
                                                             # multiplying in time_factor helps us adjust if things slow down. This keeps the game moving evenly.
 
         spacing_y = self.H_LINES_SPACING * self.height
@@ -234,7 +236,9 @@ class MainWidget(Widget):
             self.current_offset_y -= spacing_y # # ... you just re-establish the offset as the same as the spacing, which in practice keeps inserting lines.
             self.current_y_loop += 1 # (it seems) this updates the current y loop 
             self.generate_tiles_coordinates() # ?? this keeps creating the tiles infinitely
-        self.current_offset_x += self.current_speed_x * time_factor
+        
+        speed_x = self.current_speed_x * self.width / 100
+        self.current_offset_x += speed_x * time_factor
 
 class GalaxyApp(App):
     pass
