@@ -22,18 +22,18 @@ class MainWidget(Widget):
     perspective_point_y = NumericProperty(0)
 
     V_NB_LINES = 8
-    V_LINES_SPACING = .4  # 10% of the screen width
+    V_LINES_SPACING = .1  # a percentage of the screen width
     vertical_lines = []  # this will be where we keep the lists of vertical lines
 
     H_NB_LINES = 15
     H_LINES_SPACING = .1   # this is the percentage in screen height
     horizontal_lines = []  # this will be where we keep the lists of vertical lines
 
-    SPEED = .8
+    SPEED = .1
     current_offset_y = 0
     current_y_loop = 0
 
-    SPEED_X = 3.0
+    SPEED_X = 1.0
     current_speed_x = 0
     current_offset_x = 0
 
@@ -46,6 +46,7 @@ class MainWidget(Widget):
     SHIP_HEIGHT = 0.035
     SHIP_BASE_Y = 0.04 
     ship = None
+    ship_coordinates = [(0,0) (0,0) (0,0)] # this will store where the ship is located.
 
     def __init__(self, **kwargs):
         super(MainWidget, self).__init__(**kwargs)
@@ -81,12 +82,18 @@ class MainWidget(Widget):
         base_y = self.SHIP_BASE_Y * self.height # guess this is a relative measurement * height of the screen
         ship_half_width = self.SHIP_WIDTH * self.width / 2
         ship_height = self.SHIP_HEIGHT * self.height
-        
+
+        self.ship_coordinates
+
         x1, y1 = self.transform(center_x - ship_half_width, base_y) # x1, y1 is the bottom left of the triangle
         x2, y2 = self.transform(center_x, base_y + ship_height)
         x3, y3 = self.transform(center_x + ship_half_width, base_y)
         
         self.ship.points = [x1, y1, x2, y2, x3, y3]
+
+    def check_ship_collision_with_tile(self, ti_x, ti_y):
+        xmin, ymin = self.get_tile_coordinates(ti_x, ti_y) # not sure what either of these achieves ...
+        xmax, ymax = self.get_tile_coordinates(ti_x + 1, ti_y + 1)
 
     def init_tiles(self):
         with self.canvas:
