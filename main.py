@@ -46,7 +46,7 @@ class MainWidget(Widget):
     SHIP_HEIGHT = 0.035
     SHIP_BASE_Y = 0.04 
     ship = None
-    ship_coordinates = [(0,0) (0,0) (0,0)] # this will store where the ship is located.
+    ship_coordinates = [(0,0) (0,0) (0,0)] # this list will store where the ship is located (all initialized to 0)
 
     def __init__(self, **kwargs):
         super(MainWidget, self).__init__(**kwargs)
@@ -83,17 +83,25 @@ class MainWidget(Widget):
         ship_half_width = self.SHIP_WIDTH * self.width / 2
         ship_height = self.SHIP_HEIGHT * self.height
 
-        self.ship_coordinates
+        # assigning these tuples to the ship_coordiantes list:
+        self.ship_coordinates[0] = (center_x - ship_half_width, base_y)
+        self.ship_coordinates[1] = (center_x, base_y + ship_height)
+        self.ship_coordinates[2] = (center_x + ship_half_width, base_y)
 
-        x1, y1 = self.transform(center_x - ship_half_width, base_y) # x1, y1 is the bottom left of the triangle
-        x2, y2 = self.transform(center_x, base_y + ship_height)
-        x3, y3 = self.transform(center_x + ship_half_width, base_y)
+        # using those established tuples, THEN we do the transform:
+        x1, y1 = self.transform(self.ship_coordinates[0])
+        x2, y2 = self.transform(self.ship_coordinates[1])
+        x3, y3 = self.transform(self.ship_coordinates[2])
         
         self.ship.points = [x1, y1, x2, y2, x3, y3]
 
     def check_ship_collision_with_tile(self, ti_x, ti_y):
         xmin, ymin = self.get_tile_coordinates(ti_x, ti_y) # not sure what either of these achieves ...
         xmax, ymax = self.get_tile_coordinates(ti_x + 1, ti_y + 1)
+        # now we loop through the list for the coordiantes:
+        for i in range(0,3):
+            px, py = self.ship_coordinates[i]  # the key is to check to see if the point is inside the maxes or mins shown above
+
 
     def init_tiles(self):
         with self.canvas:
