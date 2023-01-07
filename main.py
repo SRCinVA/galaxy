@@ -95,13 +95,24 @@ class MainWidget(Widget):
         
         self.ship.points = [x1, y1, x2, y2, x3, y3]
 
+    def check_ship_collision(self):  # this would be more accurately name "ship_on_course" (possibly?)
+        for i in range (0, len(self.tiles_coordinates)): # loop through the members in this list
+            ti_x, ti_y = self.tiles_coordinates[i]
+            if ti_y > self.current_y_loop + 1:  # if the next y is more than one tile away, we don't need to bother to test.
+                return False  # mind blown. Don't follow his reasoning here.
+            if self.check_ship_collision_with_tile(ti_x, ti_y):
+                return True   # not seeing his reasoning behind these return statements.
+        return False # basically, no collision happened ...
+
     def check_ship_collision_with_tile(self, ti_x, ti_y):
-        xmin, ymin = self.get_tile_coordinates(ti_x, ti_y) # not sure what either of these achieves ...
+        xmin, ymin = self.get_tile_coordinates(ti_x, ti_y) # these two lines describe the extremes of the tile where the collision my be happening.
         xmax, ymax = self.get_tile_coordinates(ti_x + 1, ti_y + 1)
         # now we loop through the list for the coordiantes:
         for i in range(0,3):
             px, py = self.ship_coordinates[i]  # the key is to check to see if the point is inside the maxes or mins shown above
-
+            if xmin <= px <= xmax and ymin <= py <= ymax:  # this is just a more elegant expression of "x >= xmin and px <= xmin"
+                return True
+        return False
 
     def init_tiles(self):
         with self.canvas:
