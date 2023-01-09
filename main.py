@@ -22,18 +22,18 @@ class MainWidget(Widget):
     perspective_point_y = NumericProperty(0)
 
     V_NB_LINES = 8
-    V_LINES_SPACING = .1  # a percentage of the screen width
+    V_LINES_SPACING = .4  # a percentage of the screen width
     vertical_lines = []  # this will be where we keep the lists of vertical lines
 
     H_NB_LINES = 15
     H_LINES_SPACING = .1   # this is the percentage in screen height
     horizontal_lines = []  # this will be where we keep the lists of vertical lines
 
-    SPEED = .1
+    SPEED = .8
     current_offset_y = 0
     current_y_loop = 0
 
-    SPEED_X = 1.0
+    SPEED_X = 3.0
     current_speed_x = 0
     current_offset_x = 0
 
@@ -46,7 +46,7 @@ class MainWidget(Widget):
     SHIP_HEIGHT = 0.035
     SHIP_BASE_Y = 0.04 
     ship = None
-    ship_coordinates = [(0,0) (0,0) (0,0)] # this list will store where the ship is located (all initialized to 0)
+    ship_coordinates = [(0,0), (0,0), (0,0)] # this list will store where the ship is located (all initialized to 0)
 
     def __init__(self, **kwargs):
         super(MainWidget, self).__init__(**kwargs)
@@ -89,9 +89,9 @@ class MainWidget(Widget):
         self.ship_coordinates[2] = (center_x + ship_half_width, base_y)
 
         # using those established tuples, THEN we do the transform:
-        x1, y1 = self.transform(self.ship_coordinates[0])
-        x2, y2 = self.transform(self.ship_coordinates[1])
-        x3, y3 = self.transform(self.ship_coordinates[2])
+        x1, y1 = self.transform(*self.ship_coordinates[0]) # why the stars?
+        x2, y2 = self.transform(*self.ship_coordinates[1])
+        x3, y3 = self.transform(*self.ship_coordinates[2])
         
         self.ship.points = [x1, y1, x2, y2, x3, y3]
 
@@ -99,10 +99,10 @@ class MainWidget(Widget):
         for i in range (0, len(self.tiles_coordinates)): # loop through the members in this list
             ti_x, ti_y = self.tiles_coordinates[i]
             if ti_y > self.current_y_loop + 1:  # if the next y is more than one tile away, we don't need to bother to test.
-                return False  # mind blown. Don't follow his reasoning here.
-            if self.check_ship_collision_with_tile(ti_x, ti_y):
-                return True   # not seeing his reasoning behind these return statements.
-        return False # basically, no collision happened ...
+                return False  # then we;ve fallen off the track
+            if self.check_ship_collision_with_tile(ti_x, ti_y): # this tests an individual tile
+                return True   # if True, it means we are still on the track
+        return False # don't understand how this function resolves
 
     def check_ship_collision_with_tile(self, ti_x, ti_y):
         xmin, ymin = self.get_tile_coordinates(ti_x, ti_y) # these two lines describe the extremes of the tile where the collision my be happening.
@@ -265,6 +265,9 @@ class MainWidget(Widget):
         
         speed_x = self.current_speed_x * self.width / 100
         self.current_offset_x += speed_x * time_factor
+
+        if not self.check_ship_collision(): # meaning, if we return False for this function 
+            print("GAME OVER")
 
 class GalaxyApp(App):
     pass
