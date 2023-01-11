@@ -48,6 +48,8 @@ class MainWidget(Widget):
     ship = None
     ship_coordinates = [(0,0), (0,0), (0,0)] # this list will store where the ship is located (all initialized to 0)
 
+    state_game_over = False  # our default is that the game is not over.
+
     def __init__(self, **kwargs):
         super(MainWidget, self).__init__(**kwargs)
         print("INIT W: " + str(self.width) + " H: " + str(self.height)) # from the __init__ function, the window can report its default size
@@ -253,20 +255,22 @@ class MainWidget(Widget):
         self.update_tiles()
         self.update_ship()
 
-        speed_y = self.SPEED * self.height / 100
-        self.current_offset_y += speed_y * time_factor  # increment this variable every time update() runs. Creates the impression of moving forward on the grid, by adding space "on top" of each line. 
-                                                            # multiplying in time_factor helps us adjust if things slow down. This keeps the game moving evenly.
+        if not self.state_game_over: # a check to make sure the game is not already over
+            speed_y = self.SPEED * self.height / 100
+            self.current_offset_y += speed_y * time_factor  # increment this variable every time update() runs. Creates the impression of moving forward on the grid, by adding space "on top" of each line. 
+                                                                # multiplying in time_factor helps us adjust if things slow down. This keeps the game moving evenly.
 
-        spacing_y = self.H_LINES_SPACING * self.height
-        if self.current_offset_y >= spacing_y: # basically, as soon as the offset exceeds the spacing, you need to create another line for the illusion of the looping line. 
-            self.current_offset_y -= spacing_y # # ... you just re-establish the offset as the same as the spacing, which in practice keeps inserting lines.
-            self.current_y_loop += 1 # (it seems) this updates the current y loop 
-            self.generate_tiles_coordinates() # ?? this keeps creating the tiles infinitely
-        
-        speed_x = self.current_speed_x * self.width / 100
-        self.current_offset_x += speed_x * time_factor
+            spacing_y = self.H_LINES_SPACING * self.height
+            if self.current_offset_y >= spacing_y: # basically, as soon as the offset exceeds the spacing, you need to create another line for the illusion of the looping line. 
+                self.current_offset_y -= spacing_y # # ... you just re-establish the offset as the same as the spacing, which in practice keeps inserting lines.
+                self.current_y_loop += 1 # (it seems) this updates the current y loop 
+                self.generate_tiles_coordinates() # ?? this keeps creating the tiles infinitely
+            
+            speed_x = self.current_speed_x * self.width / 100
+            self.current_offset_x += speed_x * time_factor
 
-        if not self.check_ship_collision(): # meaning, if we return False for this function 
+        if not self.check_ship_collision() and not self.state_game_over: # meaning, if we return False for this function and we're not already in a state of the game being over.
+            self.state_game_over = True
             print("GAME OVER")
 
 class GalaxyApp(App):
