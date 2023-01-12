@@ -33,7 +33,7 @@ class MainWidget(Widget):
     current_offset_y = 0
     current_y_loop = 0
 
-    SPEED_X = 3.0
+    SPEED_X = 3
     current_speed_x = 0
     current_offset_x = 0
 
@@ -97,8 +97,8 @@ class MainWidget(Widget):
         
         self.ship.points = [x1, y1, x2, y2, x3, y3]
 
-    def check_ship_collision(self):  # this would be more accurately name "ship_on_course" (possibly?)
-        for i in range (0, len(self.tiles_coordinates)): # loop through the members in this list
+    def check_ship_collision(self):  # this would be more accurately name "ship_on_track"
+        for i in range(0, len(self.tiles_coordinates)): # loop through the members in this list
             ti_x, ti_y = self.tiles_coordinates[i]
             if ti_y > self.current_y_loop + 1:  # if the next y is more than one tile away, we don't need to bother to test.
                 return False  # then we;ve fallen off the track
@@ -261,7 +261,7 @@ class MainWidget(Widget):
                                                                 # multiplying in time_factor helps us adjust if things slow down. This keeps the game moving evenly.
 
             spacing_y = self.H_LINES_SPACING * self.height
-            if self.current_offset_y >= spacing_y: # basically, as soon as the offset exceeds the spacing, you need to create another line for the illusion of the looping line. 
+            while self.current_offset_y >= spacing_y: # basically, as soon as the offset exceeds the spacing, you need to create another line for the illusion of the looping line. 
                 self.current_offset_y -= spacing_y # # ... you just re-establish the offset as the same as the spacing, which in practice keeps inserting lines.
                 self.current_y_loop += 1 # (it seems) this updates the current y loop 
                 self.generate_tiles_coordinates() # ?? this keeps creating the tiles infinitely
@@ -270,7 +270,7 @@ class MainWidget(Widget):
             self.current_offset_x += speed_x * time_factor
 
         if not self.check_ship_collision() and not self.state_game_over: # meaning, if we return False for this function and we're not already in a state of the game being over.
-            self.state_game_over = True
+            self.state_game_over = True # he has True in the video, but that simply does not make sense. 
             print("GAME OVER")
 
 class GalaxyApp(App):
