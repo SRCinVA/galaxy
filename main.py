@@ -15,7 +15,9 @@ from kivy.graphics.vertex_instructions import Triangle
 from kivy.uix.widget import Widget
 from kivy.properties import Clock
 from kivy.graphics.vertex_instructions import Quad
+from kivy.lang.builder import Builder
 
+Builder.load_file("menu.kv")
 
 class MainWidget(RelativeLayout):
     from transforms import transform, transform_2D, transform_perspective
