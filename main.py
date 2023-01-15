@@ -53,6 +53,7 @@ class MainWidget(RelativeLayout):
     ship_coordinates = [(0,0), (0,0), (0,0)] # this list will store where the ship is located (all initialized to 0)
 
     state_game_over = False  # our default is that the game is not over.
+    state_game_has_started = False
 
     def __init__(self, **kwargs):
         super(MainWidget, self).__init__(**kwargs)
@@ -259,7 +260,7 @@ class MainWidget(RelativeLayout):
         self.update_tiles()
         self.update_ship()
 
-        if not self.state_game_over: # a check to make sure the game is not already over
+        if not self.state_game_over and self.state_game_has_started: # a check to make sure the game is not already over
             speed_y = self.SPEED * self.height / 100
             self.current_offset_y += speed_y * time_factor  # increment this variable every time update() runs. Creates the impression of moving forward on the grid, by adding space "on top" of each line. 
                                                                 # multiplying in time_factor helps us adjust if things slow down. This keeps the game moving evenly.
@@ -276,6 +277,9 @@ class MainWidget(RelativeLayout):
         if not self.check_ship_collision() and not self.state_game_over: # meaning, if we return False for this function and we're not already in a state of the game being over.
             self.state_game_over = True # he has True in the video, but that simply does not make sense. 
             print("GAME OVER")
+
+    def on_menu_button_pressed(self):
+        print("BUTTON")
 
 class GalaxyApp(App):
     pass
