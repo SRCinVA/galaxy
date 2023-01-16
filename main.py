@@ -8,13 +8,10 @@ Config.set('graphics', 'height', '400')
 from kivy import platform # to determine if the platform is desktop or mobile
 from kivy.core.window import Window  # this needs to come after the configuration settings (can't remember why ...)
 from kivy.app import App
-from kivy.properties import NumericProperty
 from kivy.graphics.context_instructions import Color
-from kivy.graphics.vertex_instructions import Line
-from kivy.graphics.vertex_instructions import Triangle
+from kivy.graphics.vertex_instructions import Line, Triangle, Quad
 from kivy.uix.widget import Widget
-from kivy.properties import Clock
-from kivy.graphics.vertex_instructions import Quad
+from kivy.properties import Clock, ObjectProperty, NumericProperty
 from kivy.lang.builder import Builder
 
 Builder.load_file("menu.kv")
@@ -22,6 +19,8 @@ Builder.load_file("menu.kv")
 class MainWidget(RelativeLayout):
     from transforms import transform, transform_2D, transform_perspective
     from user_actions import keyboard_closed, on_keyboard_down, on_keyboard_up, on_touch_down, on_touch_up
+    
+    menu_widget = ObjectProperty()
     perspective_point_x = NumericProperty(0)
     perspective_point_y = NumericProperty(0)
 
@@ -54,6 +53,8 @@ class MainWidget(RelativeLayout):
 
     state_game_over = False  # our default is that the game is not over.
     state_game_has_started = False
+
+
 
     def __init__(self, **kwargs):
         super(MainWidget, self).__init__(**kwargs)
@@ -280,6 +281,8 @@ class MainWidget(RelativeLayout):
 
     def on_menu_button_pressed(self):
         print("BUTTON")
+        self.state_game_has_started = True
+        self.menu_widget.opacity = 0
 
 class GalaxyApp(App):
     pass

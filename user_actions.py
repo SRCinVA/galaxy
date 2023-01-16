@@ -1,3 +1,6 @@
+from kivy.uix.relativelayout import RelativeLayout
+
+
 def keyboard_closed(self):  # not sure what this is doing ... ??
     self._keyboard.unbind(on_key_down=self.on_keyboard_down)
     self._keyboard.unbind(on_key_up=self.on_keyboard_up)
@@ -23,6 +26,8 @@ def on_touch_down(self, touch):
     else:
         # print("->")
         self.current_speed_x = -self.SPEED_X
+    return super(RelativeLayout, self).on_touch_down(touch)  # don't follow his explanation here ...
+
 
 def on_touch_up(self, touch):
     # return super().on_touch_up(touch)
