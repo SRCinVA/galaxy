@@ -20,12 +20,14 @@ def on_keyboard_up(self, keyboard, keycode):
 
 def on_touch_down(self, touch):
         # return super().on_touch_down(touch)
-    if touch.x < self.width/2:
-        # print("<-")
-        self.current_speed_x = self.SPEED_X
-    else:
-        # print("->")
-        self.current_speed_x = -self.SPEED_X
+    
+    if not self.state_game_over and self.state_game_has_started: # to ensure that movement only happens in the correct state
+        if touch.x < self.width/2:
+            # print("<-")
+            self.current_speed_x = self.SPEED_X
+        else:
+            # print("->")
+            self.current_speed_x = -self.SPEED_X
     return super(RelativeLayout, self).on_touch_down(touch)  # don't follow his explanation here ...
 
 
