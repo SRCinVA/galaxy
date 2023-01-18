@@ -277,6 +277,8 @@ class MainWidget(RelativeLayout):
 
         if not self.check_ship_collision() and not self.state_game_over: # meaning, if we return False for this function and we're not already in a state of the game being over.
             self.state_game_over = True # he has True in the video, but that simply does not make sense. 
+            self.menu_widget.opacity =  1 # if it's Game Over, then opacity goes to 1 (the track gets darker).
+
             print("GAME OVER")
 
     def on_menu_button_pressed(self):
