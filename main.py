@@ -61,8 +61,7 @@ class MainWidget(RelativeLayout):
         self.init_horizontal_lines()
         self.init_tiles()
         self.init_ship() # path needs to come first; otherwise, the ship will be under it.
-        self.pre_fill_tiles_coordinates()
-        self.generate_tiles_coordinates()
+        self.reset_game() # we can run this because it contains those two methods (don't understand--wouldn't this just constantly restart the game?)
 
         if self.is_desktop():  # we only need to configure the keyboard if it's a desktop.
             self.keyboard = Window.request_keyboard(self.keyboard_closed, self)
@@ -74,6 +73,10 @@ class MainWidget(RelativeLayout):
 
     def reset_game(self):
         # need to redefine these in this method so that things start over afresh.
+        self.current_offset_y = 0
+        self.current_y_loop = 0
+        self.current_speed_x = 0
+        self.current_offset_x = 0
         self.tiles_coordinates = []
         self.pre_fill_tiles_coordinates()
         self.generate_tiles_coordinates()
