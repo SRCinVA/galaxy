@@ -11,7 +11,7 @@ from kivy.app import App
 from kivy.graphics.context_instructions import Color
 from kivy.graphics.vertex_instructions import Line, Triangle, Quad
 from kivy.uix.widget import Widget
-from kivy.properties import Clock, ObjectProperty, NumericProperty
+from kivy.properties import Clock, ObjectProperty, NumericProperty, StringProperty
 from kivy.lang.builder import Builder
 
 Builder.load_file("menu.kv")
@@ -53,6 +53,10 @@ class MainWidget(RelativeLayout):
 
     state_game_over = False  # our default is that the game is not over.
     state_game_has_started = False
+
+    menu_title = StringProperty("G   A   L   A   X   Y")
+    menu_button_title = StringProperty("START")
+
 
     def __init__(self, **kwargs):
         super(MainWidget, self).__init__(**kwargs)
@@ -285,6 +289,8 @@ class MainWidget(RelativeLayout):
 
         if not self.check_ship_collision() and not self.state_game_over: # meaning, if we return False for this function and we're not already in a state of the game being over.
             self.state_game_over = True # he has True in the video, but that simply does not make sense. 
+            self.menu_title = "G  A  M  E    O  V  E  R"  # we're redefining this term right after the game ends.
+            self.menu_button_title = "RESTART"
             self.menu_widget.opacity =  1 # if it's Game Over, then opacity goes to 1 (the track gets darker).
 
             print("GAME OVER")
