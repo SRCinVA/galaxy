@@ -57,6 +57,7 @@ class MainWidget(RelativeLayout):
     menu_title = StringProperty("G   A   L   A   X   Y")
     menu_button_title = StringProperty("START")
 
+    score_txt = StringProperty()  # first, define the variable here at the top.
 
     def __init__(self, **kwargs):
         super(MainWidget, self).__init__(**kwargs)
@@ -82,6 +83,7 @@ class MainWidget(RelativeLayout):
         self.current_speed_x = 0
         self.current_offset_x = 0
         self.tiles_coordinates = []
+        self.score_txt = "SCORE: " + str(self.current_y_loop) # resets this back to 0 with each retart.
         self.pre_fill_tiles_coordinates()
         self.generate_tiles_coordinates()
         self.state_game_over = False
@@ -282,6 +284,7 @@ class MainWidget(RelativeLayout):
             while self.current_offset_y >= spacing_y: # basically, as soon as the offset exceeds the spacing, you need to create another line for the illusion of the looping line. 
                 self.current_offset_y -= spacing_y # # ... you just re-establish the offset as the same as the spacing, which in practice keeps inserting lines.
                 self.current_y_loop += 1 # (it seems) this updates the current y loop 
+                self.score_txt = "SCORE: " + str(self.current_y_loop)
                 self.generate_tiles_coordinates() # ?? this keeps creating the tiles infinitely
             
             speed_x = self.current_speed_x * self.width / 100
