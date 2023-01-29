@@ -13,6 +13,7 @@ from kivy.graphics.vertex_instructions import Line, Triangle, Quad
 from kivy.uix.widget import Widget
 from kivy.properties import Clock, ObjectProperty, NumericProperty, StringProperty
 from kivy.lang.builder import Builder
+from kivy.core.audio import SoundLoader
 
 Builder.load_file("menu.kv")
 
@@ -59,6 +60,8 @@ class MainWidget(RelativeLayout):
 
     score_txt = StringProperty()  # first, define the variable here at the top.
 
+    sound_begin = None
+
     def __init__(self, **kwargs):
         super(MainWidget, self).__init__(**kwargs)
         print("INIT W: " + str(self.width) + " H: " + str(self.height)) # from the __init__ function, the window can report its default size
@@ -75,6 +78,14 @@ class MainWidget(RelativeLayout):
 
         Clock.schedule_interval(self.update, 1.0/60.0)  # using the update function for recreating the lines for the scrolling effect. 
                                                         # calling it 60 times per second
+
+    def init_audio(self):
+        self.sound_begin = SoundLoader.load("begin.wav")
+        self.sound_begin = SoundLoader.load("begin.wav")
+        self.sound_begin = SoundLoader.load("begin.wav")
+        self.sound_begin = SoundLoader.load("begin.wav")
+        self.sound_begin = SoundLoader.load("begin.wav")
+        self.sound_begin = SoundLoader.load("begin.wav")
 
     def reset_game(self):
         # need to redefine these in this method so that things start over afresh.
