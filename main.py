@@ -60,11 +60,18 @@ class MainWidget(RelativeLayout):
 
     score_txt = StringProperty()  # first, define the variable here at the top.
 
+    # this is just to initialize the variables
     sound_begin = None
+    sound_galaxy = None
+    sound_gameover_impact = None
+    sound_gameover_voice = None
+    sound_music1 = None
+    sound_restart = None
 
     def __init__(self, **kwargs):
         super(MainWidget, self).__init__(**kwargs)
         print("INIT W: " + str(self.width) + " H: " + str(self.height)) # from the __init__ function, the window can report its default size
+        self.init_audio()
         self.init_vertical_lines() # unclear why you're calling this function from __init__
         self.init_horizontal_lines()
         self.init_tiles()
@@ -80,12 +87,20 @@ class MainWidget(RelativeLayout):
                                                         # calling it 60 times per second
 
     def init_audio(self):
-        self.sound_begin = SoundLoader.load("begin.wav")
-        self.sound_begin = SoundLoader.load("begin.wav")
-        self.sound_begin = SoundLoader.load("begin.wav")
-        self.sound_begin = SoundLoader.load("begin.wav")
-        self.sound_begin = SoundLoader.load("begin.wav")
-        self.sound_begin = SoundLoader.load("begin.wav")
+        self.sound_begin = SoundLoader.load("audio/begin.wav")
+        self.sound_galaxy = SoundLoader.load("audio/galaxy.wav")
+        self.sound_gameover_impact = SoundLoader.load("audio/gameover_impact.wav")
+        self.sound_gameover_voice = SoundLoader.load("audio/gameover_voice.wav")
+        self.sound_music1 = SoundLoader.load("audio/music1.wav")
+        self.sound_restart = SoundLoader.load("audio/restart.wav")
+
+        self.sound_music1.volume = 1 # 1 is the maximum volume
+        self.sound_begin.volume = .25
+        self.sound_galaxy.volume = .25
+        self.sound_gameover_voice.volume = .25
+        self.sound_restart.volume = .25
+        self.sound_gameover_impact = .6
+
 
     def reset_game(self):
         # need to redefine these in this method so that things start over afresh.
