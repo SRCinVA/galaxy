@@ -326,9 +326,16 @@ class MainWidget(RelativeLayout):
 
     def on_menu_button_pressed(self):
         print("BUTTON")
+        # this block needs to live before reset_game() (unclear on his explanation for this one)
+        if self.state_game_over:
+            self.sound_restart.play()
+        else:
+            self.sound_begin.play()
+        self.sound_music1.play() # we play this whether it's the first or Nth time the game has restarted.
         self.reset_game()
         self.state_game_has_started = True
         self.menu_widget.opacity = 0
+
 
 class GalaxyApp(App):
     pass
