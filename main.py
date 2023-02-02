@@ -85,6 +85,7 @@ class MainWidget(RelativeLayout):
 
         Clock.schedule_interval(self.update, 1.0/60.0)  # using the update function for recreating the lines for the scrolling effect. 
                                                         # calling it 60 times per second
+        self.sound_galaxy.play()
 
     def init_audio(self):
         self.sound_begin = SoundLoader.load("audio/begin.wav")
@@ -99,7 +100,7 @@ class MainWidget(RelativeLayout):
         self.sound_galaxy.volume = .25
         self.sound_gameover_voice.volume = .25
         self.sound_restart.volume = .25
-        self.sound_gameover_impact = .6
+        self.sound_gameover_impact.volume = .6
 
 
     def reset_game(self):
@@ -321,8 +322,14 @@ class MainWidget(RelativeLayout):
             self.menu_title = "G  A  M  E    O  V  E  R"  # we're redefining this term right after the game ends.
             self.menu_button_title = "RESTART"
             self.menu_widget.opacity =  1 # if it's Game Over, then opacity goes to 1 (the track gets darker).
-
+            self.sound_music1.stop() # need to make sure the music stops playing.
+            self.sound_gameover_impact.play()
+            Clock.schedule_once(self.play_game_over_voice_sound, 3) # delays this fucntion from executing 
             print("GAME OVER")
+
+    def play_game_over_voice_sound(self):
+        self.sound_gameover_voice.play()
+
 
     def on_menu_button_pressed(self):
         print("BUTTON")
@@ -335,7 +342,6 @@ class MainWidget(RelativeLayout):
         self.reset_game()
         self.state_game_has_started = True
         self.menu_widget.opacity = 0
-
 
 class GalaxyApp(App):
     pass
