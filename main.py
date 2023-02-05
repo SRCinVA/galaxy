@@ -327,9 +327,9 @@ class MainWidget(RelativeLayout):
             Clock.schedule_once(self.play_game_over_voice_sound, 3) # delays this fucntion from executing 
             print("GAME OVER")
 
-    def play_game_over_voice_sound(self):
-        self.sound_gameover_voice.play()
-
+    def play_game_over_voice_sound(self, dt): # have to provide this because it's in the scheudle function.
+        if self.state_game_over:
+            self.sound_gameover_voice.play()
 
     def on_menu_button_pressed(self):
         print("BUTTON")
